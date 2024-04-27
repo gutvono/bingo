@@ -1,9 +1,5 @@
 # JogoBingo
 
-Vamos desenvolver um jogo?
-
-Simples, um jogo de bingo.
-
 As regras do bingo são as seguintes:
 
 - As cartelas possuem 25 números escritos em ordem aleatória.
