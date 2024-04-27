@@ -93,18 +93,24 @@ void sortearNumero()
     } while (numerosDoJogo[numeroSorteado - 1] == 0);
 }
 
-void verificaSePontuou()
+void proximaRodada()
 {
+
     for (int jogador = 0; bingo == false; jogador++)
     {
         Console.WriteLine(jogador);
-        if (jogador == qtdJogadores) jogador = 0;
+        if (jogador == qtdJogadores && bingo == false) jogador = 0;
         {
             for (int cartela = 0; cartela < qtdCartelas; cartela++)
             {
                 //iniciou nova cartela, zera contador do bingo e da cartela
                 contadorCartelaAndou = 0;
-                Console.WriteLine("iniciou nova cartela, zera contador do bingo. Contador = " + contadorBingo);
+                contadorBingo = 0;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    contadorColuna[i] = 0;
+                }
 
                 for (int linha = 0; linha < 5; linha++)
                 {
@@ -116,7 +122,7 @@ void verificaSePontuou()
                         if (vetorDeMatrizes[jogador][cartela][linha, coluna] == numeroSorteado)
                         {
                             //muda o valor pra negativo
-                            vetorDeMatrizes[jogador][cartela][linha, coluna] = numeroSorteado * (-1);
+                            vetorDeMatrizes[jogador][cartela][linha, coluna] *= (-1);
 
                             //aumenta contadores
                             contadorLinha++;
@@ -185,6 +191,6 @@ iniciaCartelas();
 do
 {
     sortearNumero();
-    verificaSePontuou();
+    proximaRodada();
 } while (bingo == false);
 Console.WriteLine("fim");
