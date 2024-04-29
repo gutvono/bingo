@@ -89,7 +89,7 @@ void proximaRodada()
             for (int cartela = 0; cartela < qtdCartelas; cartela++)
             {
                 //iniciou nova cartela, zera contador do bingo, da cartela e das colunas
-                contadorBingo = 0;
+                //contadorBingo = 0;
                 contadorCartelaAndou = 0;
                 for (int i = 0; i < 5; i++) contadorColuna[i] = 0;
 
@@ -127,6 +127,7 @@ void verificaContadores(int jogador, int cartela, int coluna)
     {
         linhaCompleta = true;
         jogadoresPontos[jogador]++;
+        Console.WriteLine($"Jogador {jogador} pontuou com uma LINHA!");
     }
 
     if (!colunaCompleta) contadorColuna[coluna]++;
@@ -137,16 +138,19 @@ void verificaContadores(int jogador, int cartela, int coluna)
         {
             colunaCompleta = true;
             jogadoresPontos[jogador]++;
+            Console.WriteLine($"Jogador {jogador} pontuou com uma COLUNA!");
         }
     }
 
     if (!bingo) contadorBingo++;
+    Console.WriteLine($"Contador bingo: {contadorBingo}");
     if (contadorBingo == 25)
     {
         jogadoresPontos[jogador] += 5;
         bingo = true;
         imprimeMatriz(vetorDeMatrizes[jogador][cartela]);
-    };
+        Console.WriteLine($"Jogador {jogador} fez um BINGO!!!");
+    }
 }
 
 void imprimeMatriz(int[,] matriz)
