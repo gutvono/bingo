@@ -6,7 +6,7 @@ bool linhaCompleta = false, colunaCompleta = false, bingo = false;
 
 //VETORES
 //cada posição é um jogador. ao acessar jogadoresPontos[0] o retorno é a pontuação do jogador 1 (i + 1). 
-int[] jogadoresPontos, numerosDoJogo = new int[99], contadorColuna = new int[5];
+int[] jogadoresPontos, numerosDoJogo = new int[99], contadorColuna = new int[5], vetorContadorBingo;
 
 //MATRIZES
 //o INDEX do vetor, está relacionado ao INDEX do vetor jogadoresPontos
@@ -38,6 +38,7 @@ void iniciarVetores()
 {
     jogadoresPontos = new int[qtdJogadores];
     vetorDeMatrizes = new int[qtdJogadores][][,];
+    vetorContadorBingo = new int[qtdJogadores * qtdCartelas];
 }
 
 
@@ -79,6 +80,15 @@ int[,] popularCartelas()
     }
 
     return matriz;
+}
+
+void sortearNumero()
+{
+    do
+    {
+        numeroSorteado = new Random().Next(1, 100);
+        if (numerosDoJogo[numeroSorteado - 1] == 0) numerosDoJogo[numeroSorteado - 1] = 1;
+    } while (numerosDoJogo[numeroSorteado - 1] == 0);
 }
 
 void proximaRodada()
@@ -142,15 +152,32 @@ void verificaContadores(int jogador, int cartela, int coluna)
         }
     }
 
-    if (!bingo) contadorBingo++;
-    Console.WriteLine($"Contador bingo: {contadorBingo}");
-    if (contadorBingo == 25)
+
+    for (int cart = 0; cart < qtdJogadores * qtdCartelas; cart++)
     {
-        jogadoresPontos[jogador] += 5;
-        bingo = true;
-        imprimeMatriz(vetorDeMatrizes[jogador][cartela]);
-        Console.WriteLine($"Jogador {jogador} fez um BINGO!!!");
+        if (cart == cartela)
+        {
+            //vetorContadorBingo[cart * jogador + 1]++;
+
+            if (vetorContadorBingo[cart] == 25)
+            {
+                jogadoresPontos[jogador] += 5;
+                bingo = true;
+                imprimeMatriz(vetorDeMatrizes[jogador][cartela]);
+                Console.WriteLine($"Jogador {jogador} fez um BINGO!!!");
+            }
+        }
     }
+
+    //if (!bingo) contadorBingo++;
+    //Console.WriteLine($"Contador bingo: {contadorBingo}");
+    //if (contadorBingo == 25)
+    //{
+    //    jogadoresPontos[jogador] += 5;
+    //    bingo = true;
+    //    imprimeMatriz(vetorDeMatrizes[jogador][cartela]);
+    //    Console.WriteLine($"Jogador {jogador} fez um BINGO!!!");
+    //}
 }
 
 void imprimeMatriz(int[,] matriz)
@@ -178,7 +205,7 @@ iniciaCartelas();
 do
 {
     //sorteia novo numero
-    numeroSorteado = new Random().Next(1, 100);
+    sortearNumero();
     //faz toda lógica da rodada
     proximaRodada();
     //avisa que o numero ja foi sorteado para que não troque o sinal de um número já sorteado na cartela novamente
