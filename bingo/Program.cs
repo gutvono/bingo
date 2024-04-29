@@ -1,5 +1,4 @@
-﻿//TODA TABELA (uma cabela a cada 5 linhas) TERÁ AS SEGUINTES INFORMAÇÕES NA COLUNA 6 (índice 5)
-//*(-1) -> marca e desmarca um determinado número na tabela
+﻿//*(-1) -> marca e desmarca um determinado número na tabela
 
 //VARIÁVEIS
 int qtdJogadores = 1, qtdCartelas = 1, contadorCartelaAndou = 0, contadorLinha = 0, contadorBingo = 0, numeroSorteado = 0;
@@ -55,7 +54,7 @@ void iniciaCartelas()
     }
 }
 
-//populajogador a matrrz dos jogadores (utilizar esta função no momento de atribuir valores em uma matriz , ex: matriz = popularCartelas(vetorDeMatrizes[0]))
+//populajogador a matriz dos jogadores (utilizar esta função no momento de atribuir valores em uma matriz)
 int[,] popularCartelas()
 {
     int[,] matriz = new int[5, 5];
@@ -82,59 +81,33 @@ int[,] popularCartelas()
     return matriz;
 }
 
-//anda uma rodada -> faz o sorteio, verifica todas as cartelas, soma os contadores, atribui pontos
-//void sortearNumero()
-//{
-//    do
-//    {
-//        numeroSorteado = new Random().Next(1, 100);
-
-//        if (numerosDoJogo[numeroSorteado - 1] == 0) numerosDoJogo[numeroSorteado - 1] = 1;
-//    } while (numerosDoJogo[numeroSorteado - 1] == 0);
-//}
-
 void proximaRodada()
 {
-
     for (int jogador = 0; jogador < qtdJogadores; jogador++)
     {
-        Console.WriteLine($"Jogador: {jogador}");
         {
             for (int cartela = 0; cartela < qtdCartelas; cartela++)
             {
-                Console.WriteLine($"Cartela: {cartela}");
                 //iniciou nova cartela, zera contador do bingo, da cartela e das colunas
-                contadorCartelaAndou = 0;
                 contadorBingo = 0;
-
-                for (int i = 0; i < 5; i++)
-                {
-                    contadorColuna[i] = 0;
-                    Console.WriteLine($"Contador da coluna: {contadorColuna[i]}");
-                }
+                contadorCartelaAndou = 0;
+                for (int i = 0; i < 5; i++) contadorColuna[i] = 0;
 
                 for (int linha = 0; linha < 5; linha++)
                 {
                     contadorLinha = 0;
-                    Console.WriteLine($"Linha: {linha}");
+
                     for (int coluna = 0; coluna < 5; coluna++)
                     {
-                        Console.WriteLine($"Coluna: {coluna}");
-                        Console.WriteLine($"Contador cartela andou: {contadorCartelaAndou}");
                         contadorCartelaAndou++;
                         //a posição da cartela bateu com o numero sorteado, muda o valor para negativo e soma +1 nos contadores
                         if (vetorDeMatrizes[jogador][cartela][linha, coluna] == numeroSorteado)
                         {
                             //muda o valor pra negativo
-                            Console.WriteLine($"Valor sorteado: {numeroSorteado} \n Valor na tabela: {vetorDeMatrizes[jogador][cartela][linha, coluna]}");
-                            vetorDeMatrizes[jogador][cartela][linha, coluna] *= (-1);
-                            Console.WriteLine($"Valor após trocar sinal: {vetorDeMatrizes[jogador][cartela][linha, coluna]}");
-
-                            //aumenta contadores
-                            contadorLinha++;
-                            contadorColuna[coluna]++;
-                            contadorBingo++;
-                            Console.WriteLine($"Contadores de pontuação:\n Linha:");
+                            if (numerosDoJogo[numeroSorteado - 1] == 0)
+                            {
+                                vetorDeMatrizes[jogador][cartela][linha, coluna] *= (-1);
+                            }
 
                             //verifica contadores
                             verificaContadores(jogador, cartela, coluna);
@@ -148,41 +121,43 @@ void proximaRodada()
 
 void verificaContadores(int jogador, int cartela, int coluna)
 {
+    if (!linhaCompleta) contadorLinha++;
+    //bateu linha
     if (contadorLinha == 5)
     {
         linhaCompleta = true;
         jogadoresPontos[jogador]++;
     }
-        
+
+    if (!colunaCompleta) contadorColuna[coluna]++;
     for (int i = 0; i < 5; i++)
     {
         //bateu alguma coluna
         if (contadorColuna[i] == 5)
         {
-            jogadoresPontos[jogador]++;
             colunaCompleta = true;
+            jogadoresPontos[jogador]++;
         }
     }
 
+    if (!bingo) contadorBingo++;
     if (contadorBingo == 25)
     {
-        Console.Write("\ncontador bingo = " + contadorBingo);
         jogadoresPontos[jogador] += 5;
         bingo = true;
-        Console.WriteLine("\n\nCartela vencedora: ");
         imprimeMatriz(vetorDeMatrizes[jogador][cartela]);
     };
 }
 
 void imprimeMatriz(int[,] matriz)
 {
-    Console.WriteLine("funcao de imprimir");
+    Console.WriteLine("CARTELA VENCEDORA:\n");
     for (int l = 0; l < 5; l++)
     {
         if (l > 0) Console.WriteLine();
         for (int c = 0; c < 5; c++)
         {
-            Console.WriteLine(matriz[l, c]);
+            Console.Write("| " + (matriz[l, c]).ToString().PadLeft(2, '0') + "|  ");
         }
     }
 }
@@ -198,8 +173,12 @@ iniciaCartelas();
 
 do
 {
+    //sorteia novo numero
     numeroSorteado = new Random().Next(1, 100);
+    //faz toda lógica da rodada
     proximaRodada();
+    //avisa que o numero ja foi sorteado para que não troque o sinal de um número já sorteado na cartela novamente
+    numerosDoJogo[numeroSorteado - 1] = 1;
 } while (bingo == false);
 
 Console.WriteLine("fim");
